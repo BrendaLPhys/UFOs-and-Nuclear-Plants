@@ -30,7 +30,6 @@ library("tm")
 library("SnowballC")
 library("wordcloud")
 library("syuzhet")
-
 ```
 
 General
@@ -39,7 +38,7 @@ General
 Column
 -----------------------------------------------------------------------
 
-### Location, location, location...
+### UFO sightings and nuclear plant locations
 
 ```{r warning=FALSE, message=FALSE}
 
@@ -54,7 +53,6 @@ p <- ggplot() +
     theme_void() + ylim(50,59) + coord_map() +
     geom_point(data = data2, aes(x=Longitude, y = Latitude, text = 'Nuclear facility'), colour = 'purple') +
     geom_point(aes(x=-1.76625, y = 51.23731, text = 'Stonehenge'), colour = 'black')+
-    ggtitle('UFO sightings and nuclear plant locations') +
     guides( colour = guide_legend()) +
     theme(plot.title = element_text(size= 12, color = "#4e4d47"))
 
@@ -68,6 +66,7 @@ Row
 ### Cities
 
 ```{r message=FALSE, warning=FALSE}
+
 data1 <- read.csv("UFO-nuclear.csv")
 
 fig <- plot_ly(data1, x = ~plant_in_city, y = ~City, type = 'bar', marker = list(color = 'teal'))
@@ -86,16 +85,15 @@ Column
 
 ### UFO event duration time in cities with nuclear plants
 
-```{r}
+```{r warning = FALSE, message = FALSE}
+
 data1 <- read.csv("UFO-nuclear.csv")
 
 nuclear <- data1 %>% dplyr::filter(plant_in_city == 'Yes')
 
-nuclear <- nuclear %>% dplyr::select(datetime, duration, shape, City)
+nuclear <- nuclear %>% group_by(duration) %>% summarise(count = n())
 
-fig <- plot_ly(nuclear, labels = ~duration, type = 'pie')
-
-fig <- fig %>% layout(title = 'UFO event duration near nuclear plants')
+fig <- plot_ly(nuclear, values = ~count, labels = ~duration, parents = rep(" ", length(nuclear$duration)), type = 'treemap')
 
 fig
 
@@ -131,13 +129,11 @@ Column
 
 data1 <- read.csv("UFO-nuclear.csv")
 
-nuclear <- data1 %>% dplyr::filter(plant_in_city == 'No')
+no_nuclear <- data1 %>% dplyr::filter(plant_in_city == "No") 
 
-nuclear <- nuclear %>% dplyr::select(datetime, duration, shape, City)
+no_nuclear <- no_nuclear %>% group_by(duration) %>% summarise(count = n())
 
-fig <- plot_ly(nuclear, labels = ~duration, type = 'pie')
-
-fig <- fig %>% layout(title = 'UFO event duration near nuclear plants')
+fig <- plot_ly(no_nuclear, values = ~count, labels = ~duration, parents = rep(" ", length(no_nuclear$duration)), type = 'treemap')
 
 fig
 
@@ -158,7 +154,7 @@ nuclear <- nuclear %>% dplyr::select(datetime, duration, shape, City)
 fig <- plot_ly(nuclear, x = ~shape, type = 'histogram', marker = list(color = 'rgb(158,202,225)', line = list(color = 'rgb(8,48,107)')))
 
 fig <- fig %>% layout(barmode = 'group', 
-                      xaxis = list(title = "UFO shapes near nuclear plants"),
+                      xaxis = list(title = "UFO shapes in cities with no nuclear plants"),
                        yaxis = list(title = ""))
 
 fig
@@ -250,7 +246,6 @@ dtm_v <- sort(rowSums(dtm_m),decreasing=TRUE)
 dtm_d <- data.frame(word = names(dtm_v),freq=dtm_v)
 ```
 
-
 ### Most common words when describing UFO events
 
 ```{r}
@@ -261,9 +256,6 @@ barplot(dtm_d[1:5,]$freq, las = 2, names.arg = dtm_d[1:5,]$word,
         ylab = "Word frequencies")
 
 ```
-
-Row
---------------------------------------------------------------------------------------------------------------
 
 ### UFO Wordcloud
 
@@ -281,7 +273,7 @@ About
 Column
 -------------------------------------------------------------------------------------------------------
 
-```{r fig.cap="Source: techcluter.blogspot.com", out.width = '70%'}
+```{r fig.cap="Source: techcluter.blogspot.com", out.width = '50%'}
 
 knitr::include_graphics("Capture.JPG")
 
