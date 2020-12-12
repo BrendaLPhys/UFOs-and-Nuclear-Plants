@@ -5,8 +5,6 @@
 ### Maestría en Ciencia de Datos / Universidad de Sonora
 ### Curso: Ingeniería de Características
 
-####  Alumna: Brenda Leyva Amaya
-
 #### <span style='color:Red'> Entregas indicadas: </span>
 
 > 1. Script de proceso reproducible de limpieza de datos. 
