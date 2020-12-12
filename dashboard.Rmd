@@ -311,3 +311,4 @@ Column
 * This dashboard was created on R Markdown with the Flex dashboard functionality.
 * The original datasets contain worldwide information and the analysis can be done for any of the included countries or all.
 * Do not recommend this last idea...
+* [GitHub repository with all the stuff](https://github.com/BrendaLPhys/UFOs-and-Nuclear-Plants)
